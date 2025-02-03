@@ -17,7 +17,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, FunctionTransformer
+from sklearn.preprocessing import OrdinalEncoder, FunctionTransformer
 
 import wandb
 from sklearn.ensemble import RandomForestRegressor
@@ -72,9 +72,8 @@ def go(args):
     logger.info("Fitting")
 
     ######################################
-    sk_pipe.fit(X_train,y_train)
     ######################################
-
+    sk_pipe.fit(X_train, y_train)
     # Compute r2 and MAE
     logger.info("Scoring")
     r_squared = sk_pipe.score(X_val, y_val)
@@ -97,8 +96,7 @@ def go(args):
     #signature = mlflow.models.infer_signature(X_val, y_pred)
     mlflow.sklearn.save_model(
         sk_pipe,
-        path="random_forest_dir",
-        signature = signature,
+        "random_forest_dir",
         input_example = X_train.iloc[:5]
     )
     ######################################
@@ -228,8 +226,8 @@ def get_inference_pipeline(rf_config, max_tfidf_features):
 
     sk_pipe = Pipeline(
         steps =[
-        ("preprocessor", preprocessor)
-        ("random_forest", random_forest)
+          ("preprocessor", preprocessor),
+          ("random_forest", random_forest),
         ]
     )
 
